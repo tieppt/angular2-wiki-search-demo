@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +20,7 @@ export class AppComponent {
     this.term$
       .debounceTime(400)
       .distinctUntilChanged()
-      .flatMap((term: string) => this.service.search(term))
+      .switchMap((term: string) => this.service.search(term))
       .subscribe((res: Array<string>) => this.items = res);
   }
 }
