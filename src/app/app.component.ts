@@ -4,6 +4,8 @@ import { Subject } from 'rxjs/Subject';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/mergeMap';
 
 @Component({
   selector: 'app-root',
@@ -17,10 +19,8 @@ export class AppComponent {
   constructor(private service: WikipediaService) {
     this.term$
       .debounceTime(400)
-      .subscribe((term) => this.search(term));
-  }
-  search(term: string) {
-    this.service.search(term)
-      .subscribe(res => this.items = res);
+      .distinctUntilChanged()
+      .flatMap((term: string) => this.service.search(term))
+      .subscribe((res: Array<string>) => this.items = res);
   }
 }
